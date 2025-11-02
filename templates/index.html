@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Yelen-Solution - Gestion de Marché</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --info-color: #17a2b8;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--light-color) !important;
+        }
+        
+        .nav-item .btn {
+            transition: all 0.3s ease;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        
+        .nav-item .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .hover-scale {
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            font-weight: 500;
+            height: 100px;
+        }
+        
+        .hover-scale:hover {
+            transform: scale(1.03);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        #closePopup
+        {
+            margin-left: 25%;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
+        
+        .formulaire input {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 8px;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .formulaire input:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(0,0,0,0.02);
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+        
+        /* Welcome Screen Styles */
+        #welcomeScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            color: white;
+            text-align: center;
+            transition: opacity 0.8s ease;
+        }
+        
+        .welcome-logo {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .welcome-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .welcome-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .loading-bar {
+            width: 300px;
+            height: 4px;
+            background-color: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        
+        .loading-progress {
+            height: 100%;
+            width: 0%;
+            background-color: white;
+            border-radius: 2px;
+            transition: width 3s ease;
+        }
+        
+        .welcome-footer {
+            position: absolute;
+            bottom: 20px;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        /* Custom button styles */
+        .btn-custom {
+            border-radius: 20px;
+            padding: 10px 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        /* Card styles */
+        .dashboard-card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: none;
+            overflow: hidden;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        
+        /* Style pour les boutons actifs */
+        .nav-item .btn.active {
+            font-weight: bold;
+            box-shadow: 0 0 0 2px white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Welcome Screen -->
+    <div id="welcomeScreen">
+        <i class="bi bi-house-gear welcome-logo"></i>
+        <h1 class="welcome-title">Yelen-Solution</h1>
+        <p class="welcome-subtitle">Nous rendons l'impossible, possible</p>
+        <div class="loading-bar">
+            <div class="loading-progress" id="loadingProgress"></div>
+        </div>
+        <div class="welcome-footer">
+            Chargement de votre application...
+        </div>
+    </div>
+
+    <!-- Main Application (initially hidden) -->
+    <div id="mainApp" style="display: none;">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow mb-4 p-3">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold" href="#">
+                    <i class="bi bi-house-gear me-2"></i>
+                   Yelen-Solution
+                </a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item m-2">
+                            <a class="btn btn-outline-secondary nav-link d-flex align-items-center text-white btn-custom operator-btn" href="#" data-operator="Wave">
+                                <i class="bi bi-phone me-1"></i> Wave
+                            </a>
+                        </li>
+                        <li class="nav-item m-2">
+                            <a class="btn btn-outline-danger nav-link d-flex align-items-center text-white btn-custom operator-btn" href="#" data-operator="Orange Money">
+                                <i class="bi bi-phone me-1"></i> Orange Money
+                            </a>
+                        </li>
+                        <li class="nav-item m-2">
+                            <a class="btn btn-outline-info nav-link d-flex align-items-center text-white btn-custom operator-btn" href="#" data-operator="Moov">
+                                <i class="bi bi-phone me-1"></i> Moov
+                            </a>
+                        </li>
+                        <li class="nav-item m-2">
+                            <a class="btn btn-outline-primary nav-link d-flex align-items-center text-white btn-custom operator-btn" href="#" data-operator="Telecel">
+                                <i class="bi bi-phone me-1"></i> Telecel
+                            </a>
+                        </li>
+                        <li class="nav-item m-2">
+                            <a class="btn btn-outline-warning nav-link d-flex align-items-center text-white btn-custom operator-btn" href="#" data-operator="Sank">
+                                <i class="bi bi-phone me-1"></i> Sank
+                            </a>
+                        </li>
+                        <li class="nav-item m-2">
+                            <a class="btn btn-outline-light nav-link d-flex align-items-center text-white btn-custom operator-btn" href="#" data-operator="all">
+                                <i class="bi bi-eye me-1"></i> Tous
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-5 mb-4">
+                    <div id="newRegister" class="card dashboard-card h-100 text-center border-success">
+                        <div class="card-body d-flex flex-column justify-content-center align-items-center p-4">
+                            <i class="bi bi-person-plus-fill text-success mb-3" style="font-size: 2.5rem;"></i>
+                            <h5 class="card-title">Enregistrer un nouveau client</h5>
+                            <p class="card-text text-muted">Ajouter une nouvelle transaction de dépôt ou retrait</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-5 mb-4">
+                    <div id="stats" class="card dashboard-card h-100 text-center border-info">
+                        <div class="card-body d-flex flex-column justify-content-center align-items-center p-4">
+                            <i class="bi bi-graph-up text-info mb-3" style="font-size: 2.5rem;"></i>
+                            <h5 class="card-title">Infos des Transactions</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="popup" class="modal">
+                <div class="modal-content">
+                    <h3 class="fw-bold mb-4">Type de Transaction</h3>
+                    <div class="d-flex justify-content-center flex-wrap">
+                        <button id="Depot" class="btn btn-success btn-custom m-2">
+                            <i class="bi bi-arrow-down-circle me-2"></i> Dépôt
+                        </button>
+                        <button id="Retrait" class="btn btn-danger btn-custom m-2">
+                            <i class="bi bi-arrow-up-circle me-2"></i> Retrait
+                        </button>
+                    </div>
+                    <button id="closePopup" class="btn btn-outline-secondary mt-4 w-50 d-flex align-items-center justify-content-center">Fermer</button>
+                </div>
+            </div>
+            
+            <!-- Formulaire Dépôt -->
+            <form id="formDepot" class="modal">
+                <div class="modal-content">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="fw-bold text-success m-0">
+                            <i class="bi bi-arrow-down-circle me-2"></i> Formulaire de Dépôt
+                        </h4>
+                        <button type="button" id="closeFormDepot" class="btn-close"></button>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <input type="text" id="nom" name="nom" placeholder="Nom complet du client" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <input type="text" id="prenom" name="prenom" placeholder="Prénom du client" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <input type="text" id="CNIB" name="CNIB" placeholder="CNIB" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <input type="text" id="Transaction" name="Transaction" placeholder="Transaction" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <select id="Operateur" name="Operateur" class="form-control" required>
+                                <option value="" disabled selected>Sélectionnez un opérateur</option>
+                                <option value="Wave">Wave</option>
+                                <option value="Orange Money">Orange Money</option>
+                                <option value="Moov">Moov</option>
+                                <option value="Telecel">Telecel</option>
+                                <option value="Sank">Sank</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <input type="date" id="date" name="date" class="form-control" required>
+                        </div>
+                        <div class="col-12 mb-4">
+                            <input type="number" placeholder="Montant du dépôt" name="Montant" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-end">
+                        <button id="annuler" class="btn btn-outline-secondary me-2">Annuler</button>
+                        <button id="RegisterDepot" class="btn btn-success">Enregistrer le dépôt</button>
+                    </div>
+                </div>
+            </form>
+            
+            <!-- Formulaire Retrait -->
+            <form id="formRetrait" class="modal">
+                <div class="modal-content">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="fw-bold text-danger m-0">
+                            <i class="bi bi-arrow-up-circle me-2"></i> Formulaire de Retrait
+                        </h4>
+                        <button type="button" id="closeFormRetrait" class="btn-close"></button>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <input type="text" placeholder="Nom complet du client" name="nom" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <input type="text" placeholder="Prénom du client" name="prenom" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <input type="text" placeholder="CNIB" name="CNIB" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <input type="text" placeholder="Transaction" name="Transaction" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <select name="Operateur" class="form-control" required>
+                                <option value="" disabled selected>Sélectionnez un opérateur</option>
+                                <option value="Wave">Wave</option>
+                                <option value="Orange Money">Orange Money</option>
+                                <option value="Moov">Moov</option>
+                                <option value="Telecel">Telecel</option>
+                                <option value="Sank">Sank</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <input type="date" name="date" class="form-control" required>
+                        </div>
+                        <div class="col-12 mb-4">
+                            <input type="number" placeholder="Montant du retrait" name="Montant" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-end">
+                        <button id="annule" class="btn btn-outline-secondary me-2">Annuler</button>
+                        <button id="RegisterRetrait" class="btn btn-danger">Enregistrer le retrait</button>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="card shadow border-0 mt-4">
+                <div class="card-header bg-primary text-white d-flex">
+                    <h5 class="mb-0"><i class="bi bi-clock-history me-2 col-sm-4"></i> Transactions Récentes</h5>
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-3"></div>
+                    <button class="btn btn-success   border border-secondary ms-5 col-sm-3 w-25  " id="exportPdfBtn"><i class="bi bi-download"> </i>Exporter en pdf</button>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="border ">Date</th>
+                                    <th class="border ">Nom</th>
+                                    <th class="border ">Prénom</th>
+                                    <th class="border ">CNIB</th>
+                                    <th class="border ">Transaction</th>
+                                    <th class="border ">Opérateur</th>
+                                    <th class="border ">Montant</th>
+                                </tr>
+                            </thead>
+                           <tbody id="productsTable">
+                                {% for transaction in transactions %}
+                                <tr data-operateur="{{ transaction.operateur }}">
+                                    <td class="border">{{ transaction.date }}</td>
+                                    <td class="border">{{ transaction.nom }}</td>
+                                    <td class="border">{{ transaction.prenom }}</td>
+                                    <td class="border">{{ transaction.CNIB }}</td>
+                                    <td class="border">{{ transaction.type_transaction }}</td>
+                                    <td class="border">{{ transaction.operateur }}</td>
+                                    <td class="border">{{ transaction.montant }} FCFA</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="7" class="border text-center py-4">Aucune transaction enregistrée</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/script.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
