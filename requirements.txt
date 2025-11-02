@@ -16,7 +16,7 @@ Flask-Login==0.6.3
 Flask-SQLAlchemy==3.1.1
 fonttools==4.57.0
 greenlet==3.2.2
-gunicorn==6.13.0
+gunicorn==23.0.0
 idna==3.11
 itsdangerous==2.2.0
 Jinja2==3.1.6
