@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure--v4!$x8-^br7koah!@or76f8r!j!w#hibeqiqhespgs=_bexn(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['tonapp.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['marketmanagement-2.onrender.com', 'localhost', '127.0.0.1']
 
 
 
